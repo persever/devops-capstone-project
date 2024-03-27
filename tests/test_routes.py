@@ -151,7 +151,6 @@ class TestAccountService(TestCase):
         post_response = self.client.post(BASE_URL, json=account.serialize())
         self.assertEqual(post_response.status_code, status.HTTP_201_CREATED)
 
-        # update the account
         account_name = "Account Name"
         new_account = post_response.get_json()
         new_account["name"] = account_name
@@ -159,3 +158,9 @@ class TestAccountService(TestCase):
         self.assertEqual(put_response.status_code, status.HTTP_200_OK)
         updated_account = put_response.get_json()
         self.assertEqual(updated_account["name"], account_name)
+
+    def test_delete_account(self):
+        """It should Delete an Account"""
+        account = self._create_accounts(1)[0]
+        response = self.client.delete(f"{BASE_URL}/{account.id}")
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
